@@ -424,7 +424,16 @@ tmux_sessionizer_widget() {
 }
 # Bind the custom widget to Ctrl+f
 zle -N tmux_sessionizer_widget
-bindkey '^f' tmux_sessionizer_widget
+tmux_windowizer_widget() {
+  zle -I # Clear the input line
+  tmux-windowizer
+  zle reset-prompt # Reset the prompt
+}
+zle -N tmux_windowizer_widget
+#
+# NOTE: use the widgets if you want cleaner outputs from previous terminals
+bindkey -s '^f' 'tmux-windowizer\n'
+# bindkey -s '^f' 'tmux-sessionizer\n'
 
 # Where should I put you?
 # bindkey -s ^f "tmux-sessionizer\n"
