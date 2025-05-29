@@ -128,13 +128,15 @@ alt-f = 'workspace F'
 alt-g = 'workspace G'
 alt-i = 'workspace I'
 alt-m = 'workspace M'
-alt-n = 'workspace N'
 alt-o = 'workspace O'
-alt-p = 'workspace P'
+# NOTE: disabled this for neovim extension illuminate 
+# alt-n = 'workspace N'
+# alt-p = 'workspace P'
 alt-q = 'workspace Q'
 alt-r = 'workspace R'
 alt-s = 'workspace S'
-alt-t = 'workspace T'
+# NOTE: disabled for tmux prefix
+# alt-t = 'workspace T'
 alt-u = 'workspace U'
 alt-v = 'workspace V'
 alt-w = 'workspace W'
@@ -202,12 +204,12 @@ alt-shift-l = ['join-with right', 'mode main']
 
 
 [workspace-to-monitor-force-assignment]
-1 = ['main', '^built-in retina display$', 1, 'HDMI']
-C = ['main', '^built-in retina display$', 1]
-2 = ['secondary', '^24G2W1G4 \(1\)$', 2]
+# 1 = ['main', '^built-in retina display$', 1, 'HDMI']
+C = ['main', '^built-in retina display$', 1, 'HDMI']
+# 2 = ['secondary', '^24G2W1G4 \(1\)$', 2]
 # editor
 E = ['secondary', '^24G2W1G4 \(1\)$', 2]
-3 = ['^24G2W1G4 \(2\)$', 3]
+# 3 = ['^24G2W1G4 \(2\)$', 3]
 # browser
 B = ['^24G2W1G4 \(2\)$', 3]
 
