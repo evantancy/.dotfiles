@@ -106,87 +106,6 @@ setopt INTERACTIVE_COMMENTS # Enable comments when working in an interactive she
 setopt GLOB_DOTS # list all hidden files
 setopt PROMPT_SUBST # ??
 
-# Prompt. Using single quotes around the PROMPT is very important, otherwise
-# the git branch will always be empty. Using single quotes delays the
-# evaluation of the prompt. Also PROMPT is an alias to PS1.
-git_prompt() {
-    local branch="$(git symbolic-ref HEAD 2> /dev/null | cut -d'/' -f3)"
-    local branch_truncated="${branch:0:30}"
-    if (( ${#branch} > ${#branch_truncated} )); then
-        branch="${branch_truncated}..."
-    fi
-    [ -n "${branch}" ] && echo "(${branch})"
-}
-
-# https://github.com/joshdick/dotfiles/blob/main/zshrc.symlink
-git_info() {
-  # Exit if not inside a Git repository
-  ! git rev-parse --is-inside-work-tree > /dev/null 2>&1 && return
-
-  # Git branch/tag, or name-rev if on detached head
-  local GIT_LOCATION=${$(git symbolic-ref -q HEAD || git name-rev --name-only --no-undefined --always HEAD)#(refs/heads/|tags/)}
-
-  local AHEAD="%{$fg[red]%}⇡NUM%{$reset_color%}"
-  local BEHIND="%{$fg[cyan]%}⇣NUM%{$reset_color%}"
-  local MERGING="%{$fg[magenta]%}⚡︎%{$reset_color%}"
-  local UNTRACKED="%{$fg[red]%}●%{$reset_color%}"
-  local MODIFIED="%{$fg[yellow]%}●%{$reset_color%}"
-  local STAGED="%{$fg[green]%}●%{$reset_color%}"
-
-  local -a DIVERGENCES
-  local -a FLAGS
-
-  local NUM_AHEAD="$(git log --oneline @{u}.. 2> /dev/null | wc -l | tr -d ' ')"
-  if [ "$NUM_AHEAD" -gt 0 ]; then
-    DIVERGENCES+=( "${AHEAD//NUM/$NUM_AHEAD}" )
-  fi
-
-  local NUM_BEHIND="$(git log --oneline ..@{u} 2> /dev/null | wc -l | tr -d ' ')"
-  if [ "$NUM_BEHIND" -gt 0 ]; then
-    DIVERGENCES+=( "${BEHIND//NUM/$NUM_BEHIND}" )
-  fi
-
-  local GIT_DIR="$(git rev-parse --git-dir 2> /dev/null)"
-  if [ -n $GIT_DIR ] && test -r $GIT_DIR/MERGE_HEAD; then
-    FLAGS+=( "$MERGING" )
-  fi
-
-  if [[ -n $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
-    FLAGS+=( "$UNTRACKED" )
-  fi
-
-  if ! git diff --quiet 2> /dev/null; then
-    FLAGS+=( "$MODIFIED" )
-  fi
-
-  if ! git diff --cached --quiet 2> /dev/null; then
-    FLAGS+=( "$STAGED" )
-  fi
-
-  local -a GIT_INFO
-  GIT_INFO+=( "%{$fg[cyan]%}±" )
-  [[ ${#DIVERGENCES[@]} -ne 0 ]] && GIT_INFO+=( "${(j::)DIVERGENCES}" )
-  [[ ${#FLAGS[@]} -ne 0 ]] && GIT_INFO+=( "${(j::)FLAGS}" )
-  GIT_INFO+=( "%{$fg[red]%}($GIT_LOCATION)%{$reset_color%}" )
-  echo "${(j: :)GIT_INFO}"
-}
-
-
-git_prompt() {
-    local branch="$(git symbolic-ref HEAD 2> /dev/null | cut -d'/' -f3-)"
-    local branch_truncated="${branch:0:30}"
-    if (( ${#branch} > ${#branch_truncated} )); then
-        branch="${branch_truncated}..."
-    fi
-
-    [ -n "${branch}" ] && echo " (${branch})"
-}
-# Prompt. Using single quotes around the PROMPT is very important, otherwise
-# the git branch will always be empty. Using single quotes delays the
-# evaluation of the prompt. Also PROMPT is an alias to PS1.
-# PROMPT='%B%{$fg[cyan]%} %{$fg[blue]%}%~%{$fg[yellow]%}$(git_prompt)%{$reset_color%} %(?.$.%{$fg[red]%}$)%b '
-# TODO: refactor current prompt because current, TOO SLOW DO NOT USE
-# PROMPT='%{$fg[cyan]%}%* %{$fg[blue]%}%c%{$fg[yellow]%} $(git_info)%{$reset_color%} %(?.$.%{$fg[red]%}$)%b '
 
 
 # zsh
@@ -307,6 +226,7 @@ export FZF_COMPLETION_OPTS='--multi --inline-info --border'
 export FZF_DEFAULT_OPS='--multi --inline-info --border'
 export FZF_DEFAULT_COMMAND="rg --files --hidden $(test -d .git && echo '-g !.git')"
 export FZF_CTRL_T_COMMAND="fd --type file --follow --hidden --exclude .git --strip-cwd-prefix"
+# export FZF_CTRL_T_COMMAND=""
 # TODO disabling CTRL-T for now since i use tmux alot
 # bindkey -r '^T'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -506,3 +426,70 @@ show_virtual_env() {
 # PS1='$(show_virtual_env)'$PS1
 PS1='$VIRTUAL_ENV_PROMPT'$PS1
 export PATH="/opt/homebrew/opt/node@18/bin:$PATH"
+
+fast-git-ssh() {
+    # Check if we're in a git repository
+    if ! git rev-parse --git-dir > /dev/null 2>&1; then
+        echo "Error: Not in a git repository"
+        return 1
+    fi
+
+    # Get the current origin URL
+    local current_url=$(git config --get remote.origin.url)
+
+    if [ -z "$current_url" ]; then
+        echo "Error: No origin remote found"
+        return 1
+    fi
+
+    echo "Current origin URL: $current_url"
+
+    # Extract owner/repo from the current URL
+    # This handles formats like:
+    # git@gh-work1:owner/repo.git
+    # git@github.com:owner/repo.git
+    # https://github.com/owner/repo.git
+    local repo_path=$(echo "$current_url" | sed -E 's/.*[:/]([^/]+\/[^/]+)\.git$/\1/' | sed -E 's/.*[:/]([^/]+\/[^/]+)$/\1/')
+
+    if [ -z "$repo_path" ]; then
+        echo "Error: Could not extract repository path from URL: $current_url"
+        return 1
+    fi
+
+    echo "Extracted repo path: $repo_path"
+
+    # Prepare the new URLs
+    local https_url="https://github.com/$repo_path.git"
+    local ssh_url="git@gh-personal1:$repo_path.git"
+
+    echo
+    echo "This will update the remote URLs to:"
+    echo "  Fetch URL: $https_url"
+    echo "  Push URL:  $ssh_url"
+    echo
+
+    # Ask for user confirmation
+    echo -n "Do you want to proceed? [y/N]: "
+    read -r REPLY
+    echo
+
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+            echo "Updating remote URLs..."
+
+        # Set fetch URL to HTTPS
+        echo "Setting fetch URL to: $https_url"
+        git remote set-url origin "$https_url"
+
+        # Set push URL to SSH with gh-personal1
+        echo "Setting push URL to: $ssh_url"
+        git remote set-url --push origin "$ssh_url"
+
+        echo "✅ Remote URLs updated successfully!"
+        echo
+        echo "Current configuration:"
+        git remote -v
+    else
+        echo "❌ Operation cancelled."
+        return 0
+    fi
+}
