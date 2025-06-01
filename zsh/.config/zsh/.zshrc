@@ -187,23 +187,6 @@ compinit -i
 # aliases
 source $DOTFILES/.sh_aliases
 
-# miniconda
-# export PATH="$HOME/miniconda3/bin:$PATH"  # commented out by conda initialize
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('$HOME/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "$HOME/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="$HOME/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-# conda activate base_env
 
 # aliases ripped off Bash
 # enable color support of ls and also add handy aliases
@@ -436,7 +419,6 @@ fast-git-ssh() {
 
     # Get the current origin URL
     local current_url=$(git config --get remote.origin.url)
-
     if [ -z "$current_url" ]; then
         echo "Error: No origin remote found"
         return 1
@@ -450,7 +432,6 @@ fast-git-ssh() {
     # git@github.com:owner/repo.git
     # https://github.com/owner/repo.git
     local repo_path=$(echo "$current_url" | sed -E 's/.*[:/]([^/]+\/[^/]+)\.git$/\1/' | sed -E 's/.*[:/]([^/]+\/[^/]+)$/\1/')
-
     if [ -z "$repo_path" ]; then
         echo "Error: Could not extract repository path from URL: $current_url"
         return 1
@@ -458,9 +439,21 @@ fast-git-ssh() {
 
     echo "Extracted repo path: $repo_path"
 
+    # Extract SSH host from original URL if it's SSH format
+    local ssh_host=""
+    if [[ "$current_url" == git@*:* ]]; then
+        # Extract host using sed
+        ssh_host=$(echo "$current_url" | sed -E 's/git@([^:]+):.*/\1/')
+        echo "Detected SSH host: $ssh_host"
+    else
+        # Default to gh-work1 if current URL is not SSH format
+        ssh_host="gh-work1"
+        echo "Current URL is not SSH format, defaulting to: $ssh_host"
+    fi
+
     # Prepare the new URLs
     local https_url="https://github.com/$repo_path.git"
-    local ssh_url="git@gh-personal1:$repo_path.git"
+    local ssh_url="git@$ssh_host:$repo_path.git"
 
     echo
     echo "This will update the remote URLs to:"
@@ -474,13 +467,13 @@ fast-git-ssh() {
     echo
 
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-            echo "Updating remote URLs..."
+        echo "Updating remote URLs..."
 
         # Set fetch URL to HTTPS
         echo "Setting fetch URL to: $https_url"
         git remote set-url origin "$https_url"
 
-        # Set push URL to SSH with gh-personal1
+        # Set push URL to SSH
         echo "Setting push URL to: $ssh_url"
         git remote set-url --push origin "$ssh_url"
 
@@ -493,3 +486,24 @@ fast-git-ssh() {
         return 0
     fi
 }
+
+
+
+
+# miniconda
+# export PATH="$HOME/miniconda3/bin:$PATH"  # commented out by conda initialize
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('$HOME/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "$HOME/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="$HOME/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+# conda activate base_env
