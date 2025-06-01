@@ -1,3 +1,8 @@
+.zsh_history
+.gnupg/
+!.gnupg/gpg-agent.conf
+!.gnupg/gpg.conf
+ohmyzsh/
 .vscode
 .swp
 *.zcompdump*
@@ -5,3 +10,6 @@
 .env
 .DS_Store
 */karabiner/automatic_backups/*
+automatic_backups/
+.zcompcache/
+
