@@ -25,7 +25,7 @@ export DOTFILES="$HOME/.dotfiles"
 [ ! -d "$HOME/.local/bin" ] && mkdir -p "$HOME/.local/bin"
 
 export PATH=$PATH:~/bin
-export PATH=$PATH:~/.local/bin
+export PATH=~/.local/bin:$PATH
 
 # golang
 export PATH=$PATH:/usr/local/go/bin

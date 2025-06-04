@@ -224,7 +224,7 @@ export SUMO_HOME="/usr/share/sumo"
 export PATH="$PATH:$HOME/.foundry/bin"
 
 # diff-so-fancy
-export EDITOR="$(which nvim)"
+# export EDITOR="$(which nvim)"
 export GPG_TTY=$(tty)
 
 # rust

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+main_worktree=$(git rev-parse --show-toplevel)
+selected=$(git worktree list | grep -v "^$main_worktree" | fzf --preview 'echo "Branch: $(git -C {1} branch --show-current 2>/dev/null)"' | awk '{print $1}')
+
+if [[ -n "$selected" ]]; then
+    echo "Removing worktree: $selected"
+    git worktree remove "$selected"
+fi

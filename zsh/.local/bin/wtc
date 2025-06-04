@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+if [[ $# -eq 1 ]]; then
+    selected=$1
+else
+    branches=($(git branch -a | sed 's/^[* ] *//' | sed 's|^remotes/origin/||' | sort -u))
+    selected=$(printf "%s\n" "${branches[@]}" | fzf)
+fi
+
+if [[ -z $selected ]]; then
+    exit 0
+fi
+
+worktree_name=$(echo "$selected" | sed 's/\//_/g')
+worktree_path="./$worktree_name"
+
+if [ -d "$worktree_path" ]; then
+    echo "Worktree exists, switching to: $worktree_path"
+    cd "$worktree_path"
+else
+    echo "Creating worktree for branch: $selected"
+    git worktree add "$worktree_path" "$selected" && cd "$worktree_path"
+fi
