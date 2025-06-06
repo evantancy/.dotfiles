@@ -16,8 +16,9 @@ worktree_path="./$worktree_name"
 
 if [ -d "$worktree_path" ]; then
     echo "Worktree exists, switching to: $worktree_path"
-    cd "$worktree_path"
 else
     echo "Creating worktree for branch: $selected"
-    git worktree add "$worktree_path" "$selected" && cd "$worktree_path"
+    git worktree add "$worktree_path" "$selected"
 fi
+
+cd "$worktree_path"

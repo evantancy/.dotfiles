@@ -224,7 +224,7 @@ export SUMO_HOME="/usr/share/sumo"
 export PATH="$PATH:$HOME/.foundry/bin"
 
 # diff-so-fancy
-# export EDITOR="$(which nvim)"
+export EDITOR="$HOME/opt/nvim-macos-arm64/bin/nvim"
 export GPG_TTY=$(tty)
 
 # rust
@@ -507,3 +507,8 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 # conda activate base_env
+
+# Source wtc function to enable cd behavior
+wtc() {
+    source ~/.local/bin/wtc "$@"
+}
