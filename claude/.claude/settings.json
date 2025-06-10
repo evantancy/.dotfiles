@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run lint)",
+      "Bash(npm run test:*)",
+      "Read(~/.zshrc)",
+      "Bash(git log*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(python -m ruff*)",
+      "Bash(python -m pylint*)",
+      "Bash(python -m pyright*)",
+      "Bash(python -m pytest*)",
+      "Bash(ruff*)",
+      "Bash(pylint*)",
+      "Bash(pyright*)",
+      "Bash(pytest*)",
+      "WebFetch(domain:*.readthedocs.io)",
+      "Bash(find:*)",
+      "WebFetch(domain:arxiv.org)"
+    ],
+  },
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "0",
+    "OTEL_METRICS_EXPORTER": "otlp"
+  }
+}
