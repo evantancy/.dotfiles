@@ -129,7 +129,7 @@ alt-g = 'workspace G'
 # alt-i = 'workspace I'
 alt-m = 'workspace M'
 alt-o = 'workspace O'
-# NOTE: disabled this for neovim extension illuminate 
+# NOTE: disabled this for neovim extension illuminate
 # alt-n = 'workspace N'
 # alt-p = 'workspace P'
 alt-q = 'workspace Q'
@@ -257,3 +257,9 @@ run = 'layout floating'
 if.app-id = "com.authy"
 check-further-callbacks = true
 run = 'layout floating'
+
+[[on-window-detected]]
+if.during-aerospace-startup = false
+if.app-id = 'org.mozilla.firefox'
+if.window-title-regex-substring = 'Picture-in-Picture'
+run = ['layout floating']
