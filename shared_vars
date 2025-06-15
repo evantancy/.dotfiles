@@ -12,3 +12,7 @@ fi
 
 STOW_FOLDERS=$STOW_FOLDERS
 DOTFILES=$DOTFILES
+
+# Firefox profile variables
+FIREFOX_PROFILE_PATH=$(grep "Default=" ~/Library/Application\ Support/Firefox/installs.ini | cut -d'=' -f2 | tr -d '\n\r ')
+FIREFOX_FULL_PATH="$HOME/Library/Application Support/Firefox/$FIREFOX_PROFILE_PATH"

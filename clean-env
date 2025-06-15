@@ -4,3 +4,18 @@ source ./shared_vars
 for loc in "${STOW_FOLDERS[@]}"; do
 	stow -vD $loc
 done
+
+# firefox uninstall userChrome.css and user.js
+if [ -L "$FIREFOX_FULL_PATH/chrome/userChrome.css" ]; then
+	echo "Removing userChrome.css symlink from $FIREFOX_FULL_PATH"
+	rm "$FIREFOX_FULL_PATH/chrome/userChrome.css"
+else
+	echo "userChrome.css symlink not found or not a symlink: $FIREFOX_FULL_PATH/chrome/userChrome.css"
+fi
+
+if [ -L "$FIREFOX_FULL_PATH/user.js" ]; then
+	echo "Removing user.js symlink from $FIREFOX_FULL_PATH"
+	rm "$FIREFOX_FULL_PATH/user.js"
+else
+	echo "user.js symlink not found or not a symlink: $FIREFOX_FULL_PATH/user.js"
+fi

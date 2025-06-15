@@ -239,7 +239,7 @@ user_pref("browser.newtabpage.activity-stream.default.sites", ""); // blocks def
 user_pref("browser.aboutConfig.showWarning", false); // blocks warning when trying to change about:config
 
 // 0 = blank, 1 = home, 2 = last visited page, 3 = resume previous session
-user_pref("browser.startup.page", 1);
+user_pref("browser.startup.page", 3);
 
 user_pref("browser.newtabpage.activity-stream.showSponsored", false);
 

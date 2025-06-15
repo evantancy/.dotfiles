@@ -1,0 +1,24 @@
+/* restore tab boundaries */
+.tabbrowser-tab:not(:hover, [beforehovered], [selected], [last-visible-tab], [beforeselected-visible])::after {
+content: "";
+display: block;
+border-left: 1px solid currentColor;
+margin-block: 10px;
+margin-left: -1px;
+opacity: 0.3;
+}
+
+/*#TabsToolbar*/
+/*{*/
+/*    visibility: collapse;*/
+/*}*/
+
+/*#tabbrowser-tabs {*/
+/*    visibility: collapse;*/
+/*}*/
+/*#titlebar {*/
+/*    max-height: 0px;*/
+/*}*/
+/*#TabsToolbar .titlebar-buttonbox-container {*/
+/*    display: none;*/
+/*}*/

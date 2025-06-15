@@ -5,3 +5,19 @@ for loc in "${STOW_FOLDERS[@]}"; do
 	stow -v $loc
 	echo
 done
+
+# firefox install userChrome.css and user.js
+if [ -d "$FIREFOX_FULL_PATH" ]; then
+	echo "Installing Firefox files to $FIREFOX_FULL_PATH"
+	mkdir -p "$FIREFOX_FULL_PATH/chrome"
+	# create userChrome.css symlink if it doesn't exist
+	if [ ! -L "$FIREFOX_FULL_PATH/chrome/userChrome.css" ]; then
+		ln -s "$DOTFILES"/firefox/userChrome.css "$FIREFOX_FULL_PATH/chrome/userChrome.css"
+	fi
+	# create user.js symlink if it doesn't exist
+	if [ ! -L "$FIREFOX_FULL_PATH/user.js" ]; then
+		ln -s "$DOTFILES"/firefox/user.js "$FIREFOX_FULL_PATH/user.js"
+	fi
+else
+	echo "Firefox profile directory not found: $FIREFOX_FULL_PATH"
+fi
