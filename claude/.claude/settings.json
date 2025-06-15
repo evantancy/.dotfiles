@@ -21,11 +21,15 @@
       "Bash(find:*)",
       "WebFetch(domain:arxiv.org)",
       "Bash(daily-commits)",
-      "Bash(~/.local/bin/daily-commits)"
+      "Bash(~/.local/bin/daily-commits)",
+      "Bash(rg*)",
+      "Bash(find*)",
+      "Bash(grep*)"
     ],
     "deny": [
       "Bash(git push*)",
       "Bash(git ps*)",
+      "Bash(cat*.env*)",
     ]
   },
   "env": {
