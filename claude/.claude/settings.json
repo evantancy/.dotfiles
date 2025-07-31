@@ -29,11 +29,10 @@
     "deny": [
       "Bash(git push*)",
       "Bash(git ps*)",
-      "Bash(cat*.env*)",
+      "Bash(cat*.env*)"
     ]
   },
-  "env": {
-    "CLAUDE_CODE_ENABLE_TELEMETRY": "0",
-    "OTEL_METRICS_EXPORTER": "otlp"
+  "feedbackSurveyState": {
+    "lastShownTime": 1753939765399
   }
 }
