@@ -1,7 +1,7 @@
 export LANG=en_US.UTF-8
 # xdg
 export _Z_DATA="$HOME/.z"
-export XDG_CONFIG_HOME="$HOME/.config" # default
+export XDG_CONFIG_HOME="$HOME/.config"               # default
 export XDG_DATA_HOME="$XDG_CONFIG_HOME/.local/share" # default
 export XDG_CACHE_HOME="$XDG_CONFIG_HOME/.cache"      # default
 

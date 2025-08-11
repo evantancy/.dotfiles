@@ -3,7 +3,7 @@
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    dirs=($(find ~/work ~/work/other-subnets ~/personal ~/git-worktrees ~/random-repos -mindepth 1 -maxdepth 1 -type d))
+    dirs=($(find ~/work ~/work/other-subnets ~/personal ~/git-worktrees ~/random-repos ~/saas-r-us -mindepth 1 -maxdepth 1 -type d))
     dirs+=("$HOME/.dotfiles")
     selected=$(printf "%s\n" "${dirs[@]}" | fzf)
 fi
@@ -20,7 +20,6 @@ if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
     tmux new-session -s $session_name -c $selected -n $selected_name
     exit 0
 fi
-
 
 # Use tmux list-windows with a format to avoid extra output.
 if ! tmux list-windows -F "#{window_name}" | grep -qx "$selected_name"; then
