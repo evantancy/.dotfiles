@@ -4,32 +4,47 @@
       "Bash(npm run lint)",
       "Bash(npm run test:*)",
       "Read(~/.zshrc)",
-      "Bash(git log*)",
+      "Bash(git log:*)",
       "Bash(gh pr view:*)",
       "Bash(gh pr diff:*)",
-      "Bash(git pull*)",
-      "Bash(git fetch*)",
-      "Bash(python -m ruff*)",
-      "Bash(python -m pylint*)",
-      "Bash(python -m pyright*)",
-      "Bash(python -m pytest*)",
-      "Bash(ruff*)",
-      "Bash(pylint*)",
-      "Bash(pyright*)",
-      "Bash(pytest*)",
-      "WebFetch(domain:*.readthedocs.io)",
+      "Bash(git pull:*)",
+      "Bash(git fetch:*)",
+      "Bash(python -m ruff:*)",
+      "Bash(python -m pylint:*)",
+      "Bash(python -m pyright:*)",
+      "Bash(python -m pytest:*)",
+      "Bash(ruff:*)",
+      "Bash(pylint:*)",
+      "Bash(pyright:*)",
+      "Bash(pytest:*)",
       "Bash(find:*)",
-      "WebFetch(domain:arxiv.org)",
       "Bash(daily-commits)",
       "Bash(~/.local/bin/daily-commits)",
-      "Bash(rg*)",
-      "Bash(find*)",
-      "Bash(grep*)"
+      "Bash(rg:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "WebFetch(domain:*.readthedocs.io)",
+      "WebFetch(domain:arxiv.org)",
+      "Read(.env.example)"
     ],
     "deny": [
-      "Bash(git push*)",
-      "Bash(git ps*)",
-      "Bash(cat*.env*)"
+      "Bash(git push:*)",
+      "Bash(git ps:*)",
+      "Bash(cat:*.env:*)",
+      "Read(.env)",
+      "Read(.envrc)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/load-secrets.sh"
+          }
+        ]
+      }
     ]
   },
   "feedbackSurveyState": {

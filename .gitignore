@@ -13,3 +13,5 @@ ohmyzsh/
 automatic_backups/
 .zcompcache/
 
+# we don't commit this since it contains our emails, user id's org id's etc.
+.claude.json
