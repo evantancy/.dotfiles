@@ -1,8 +1,18 @@
 #!/usr/bin/env bash
 
-selected=$(git worktree list | fzf | awk '{print $1}')
+if [[ $# -eq 1 ]]; then
+    worktree_name=$(echo "$1" | sed 's/\//_/g')
+    selected="./$worktree_name"
+else
+    selected=$(git worktree list | fzf | awk '{print $1}')
+fi
+
+if [[ -z $selected ]]; then
+    exit 0
+fi
+
 
 if [[ -n "$selected" ]]; then
-    echo "Removing worktree: $selected"
+    echo "Removing worktree: $1 located at $selected"
     git worktree remove --force "$selected"
 fi
